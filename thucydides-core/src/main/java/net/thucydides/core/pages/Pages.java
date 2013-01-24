@@ -5,6 +5,7 @@ import net.thucydides.core.webdriver.Configuration;
 import net.thucydides.core.webdriver.WebDriverFacade;
 import net.thucydides.core.webdriver.WebdriverProxyFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.StrSubstitutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.slf4j.Logger;
@@ -227,13 +228,16 @@ public class Pages implements Serializable {
 
     /**
      * The default URL for this set of tests, or the system default URL if undefined.
+		 * Also replaces ${xx} with values from the system properties.
      */
     public String getDefaultBaseUrl() {
-
         String baseUrl = defaultBaseUrl;
         if (isNotEmpty(getConfiguration().getBaseUrl())) {
             baseUrl = getConfiguration().getBaseUrl();
         }
+				if (isNotEmpty(baseUrl)) {
+        	baseUrl = StrSubstitutor.replaceSystemProperties(baseUrl);
+				}
         return baseUrl;
     }
 
